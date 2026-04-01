@@ -1,0 +1,8 @@
+#
+# Copy this file to `.dev.vars` before running `pnpm preview`.
+# Wrangler loads `.dev.vars` for local OpenNext/Cloudflare preview.
+#
+# Add any secrets or runtime vars your app needs below.
+# Example:
+# API_TOKEN="replace-me"
+# NEXT_PUBLIC_API_BASE_URL="http://localhost:8787"
