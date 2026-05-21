@@ -1,56 +1,93 @@
-# Next.js App Router Starter
+# nextjs-love
 
-A minimal starter for fullstack apps with the Next.js App Router. The default UI is a single centered **Nullshot Beta** line so you can grow the app from a clean slate.
+A minimal [Next.js](https://nextjs.org/) App Router starter for full-stack apps on [Cloudflare Workers](https://developers.cloudflare.com/workers/) via [OpenNext](https://opennext.js.org/cloudflare). The default page is a single centered line so you can grow the app from a clean slate.
 
-## Features
+**Stack:** Next.js 16 · React 19 · Tailwind CSS v4 · OpenNext for Cloudflare · Wrangler · TanStack Query (ready to wire up)
 
-- `src/app/` directory routing
-- `layout.tsx`, `loading.tsx`, `not-found.tsx`, and metadata
-- Tailwind CSS v4 via `src/app/globals.css`
-- Ready for thin route handlers in `src/app/api/**/route.ts`
-- Backend layering: `src/services/` for business logic, `src/repositories/` for SQL/data access
+## What's included
+
+- App Router in `src/app/` (`layout`, `page`, `loading`, `not-found`)
+- Tailwind v4 via `src/app/globals.css`
+- Layered backend placeholders: `src/services/`, `src/repositories/`
 - Feature-oriented frontend placeholders: `src/features/`, `src/components/ui/`, `src/components/common/`
-- Optional local OpenNext + Wrangler workflow for Cloudflare preview/testing
+- OpenNext + Wrangler config for local preview and deploy (`wrangler.jsonc`, `open-next.config.ts`)
+- D1 migration scripts and `migrations/` folder (add a `DB` binding in `wrangler.jsonc` when you need D1)
+- Claude agent skills in `.claude/skills/` for Next.js and Cloudflare workflows
 
-## App structure (conventions)
+## Prerequisites
 
-| Area | Purpose |
+- [Node.js](https://nodejs.org/) 20+
+- [pnpm](https://pnpm.io/)
+- A [Cloudflare account](https://dash.cloudflare.com/) for `pnpm preview` and `pnpm deploy`
+
+## Quick start
+
+```bash
+pnpm install
+pnpm dev
+```
+
+Open [http://localhost:3000](http://localhost:3000). Turbopack is enabled via `next dev --turbopack`.
+
+## Scripts
+
+| Command | Description |
+|---------|-------------|
+| `pnpm dev` | Next.js dev server (Turbopack) |
+| `pnpm build` | Typecheck + production Next build |
+| `pnpm start` | Run the built Next app locally (Node) |
+| `pnpm preview` | OpenNext build + Wrangler local preview |
+| `pnpm deploy` | OpenNext build + deploy to Cloudflare |
+| `pnpm migrate:local` | Apply D1 migrations locally (`DB` binding) |
+| `pnpm migrate:prod` | Apply D1 migrations to remote D1 |
+| `pnpm cf-typegen` | Regenerate `worker-configuration.d.ts` after binding changes |
+
+## Cloudflare preview and deploy
+
+1. Copy `.dev.vars.example` to `.dev.vars` and add secrets or runtime vars your app needs.
+2. Run `pnpm preview` to build with OpenNext and serve through Wrangler locally.
+3. Run `pnpm deploy` when ready to ship (requires Wrangler auth: `wrangler login`).
+
+After changing bindings in `wrangler.jsonc`, run `pnpm cf-typegen` so TypeScript stays aligned with your Worker environment.
+
+## Project layout
+
+| Path | Purpose |
 |------|---------|
-| `src/app/**` | Routes, layouts, `loading.tsx` / `not-found.tsx`, and route handlers only. Compose UI from features and shared components; keep files thin. |
-| `src/features/<name>/` | Product features: `components/`, `hooks/`, `lib/`, `utils/`, `types.ts`, and a selective `index.ts` barrel. Hooks own data fetching and state; components stay declarative. |
-| `src/components/ui/` | Low-level, reusable UI primitives (e.g. shadcn-style building blocks). |
-| `src/components/common/` | App-wide reusable components that are not tied to one feature. |
-| `src/lib/` | Cross-cutting helpers (e.g. runtime, crypto) — not feature business logic. |
-| `src/services/` | Server-side business logic called from route handlers or Server Actions. |
+| `src/app/` | Routes, layouts, route handlers (`api/**/route.ts`). Keep files thin; compose from features. |
+| `src/features/<name>/` | Product features: `components/`, `hooks/`, `lib/`, `types.ts`, selective `index.ts` exports. |
+| `src/components/ui/` | Low-level UI primitives (wrap design-system pieces here). |
+| `src/components/common/` | Shared components used across features. |
+| `src/lib/` | Cross-cutting helpers (not feature business logic). |
+| `src/services/` | Server-side business logic for routes and Server Actions. |
 | `src/repositories/` | D1/SQL and data access only. |
+| `migrations/` | Numbered `.sql` files for D1 schema changes. |
+| `.claude/skills/` | Agent skills (auth, D1, React patterns, TanStack Query, etc.). |
+| `AGENTS.md` | Conventions for AI agents working in this repo. |
 
-Avoid wildcard barrel exports (`export * from`) to prevent name collisions and bundle bloat. Prefer direct imports for heavy third-party packages where it helps tree-shaking (see Vercel React best practices).
+Avoid wildcard barrels (`export * from`) to reduce bundle bloat and name collisions. Prefer direct imports for heavy dependencies.
 
-Cursor rules for agents live in `.cursor/rules/`. Claude skills for Next.js and Cloudflare development live in `.claude/skills/`.
+## D1 (optional)
 
-## Local Development
+This template does not ship with a D1 database configured. When you add one:
 
-1. Install dependencies with `pnpm install`.
-2. Copy `.dev.vars.example` to `.dev.vars` and add any secrets/runtime vars you need for local OpenNext/Cloudflare access.
-3. Add `.sql` files under `migrations/` when your app uses D1-backed features.
-4. Run `pnpm dev` for normal Next.js local development.
-5. Run `pnpm preview` to build with OpenNext and preview through Wrangler locally.
-6. If your app uses D1 with the default `DB` binding in `wrangler.jsonc`, run `pnpm migrate:local` for local migrations and `pnpm migrate:prod` for production migrations.
-7. Run `pnpm cf-typegen` after changing `wrangler.jsonc` bindings so `worker-configuration.d.ts` stays in sync.
+1. Add a `d1_databases` entry with binding name `DB` in `wrangler.jsonc`.
+2. Place migrations under `migrations/` (e.g. `0000_auth.sql`).
+3. Run `pnpm migrate:local` or `pnpm migrate:prod`.
 
-## Runtime Notes
+For a JWT cookie auth starter, see `.claude/skills/nextjs-auth/`.
 
-Build the app using normal App Router conventions in `src/app/`.
-Use `src/app/api/**/route.ts` or Server Actions for server-side behavior.
-Keep route handlers thin: request parsing and response shaping belong in the route, while business logic belongs in `src/services/` and SQL/D1 access belongs in `src/repositories/`.
+## Agent skills
 
-This template ships optional local OpenNext/Wrangler config so the app can run standalone on your machine.
-Playground preview and remote deploy still use the platform's custom Next-compatible runtime instead of relying on `.open-next` output.
+Skills under `.claude/skills/` guide Claude (and compatible agents) on this stack:
 
-For D1-backed features such as the default auth starter, keep schema files in `migrations/`.
-The built-in migration scripts assume the default D1 binding name is `DB`.
+**Next.js / React:** `nextjs-auth`, `frontend-features`, `vercel-react-best-practices`, `vercel-composition-patterns`, `tanstack-query`, `design-system`, `web-design-guidelines`, `web-perf`
 
-## File Structure
+**Cloudflare:** `d1-workflows`, `do-migrations`, `service-communication`
+
+See `AGENTS.md` for repo-wide conventions.
+
+## File tree
 
 ```txt
 src/
@@ -69,12 +106,14 @@ src/
   services/
   repositories/
 migrations/
-  README.md
-.claude/
-  skills/
-.cursor/
-  rules/
+.claude/skills/
+open-next.config.ts
+wrangler.jsonc
 .dev.vars.example
 worker-configuration.d.ts
-wrangler.jsonc
+AGENTS.md
 ```
+
+## License
+
+Private template — use and adapt as needed for your project.
