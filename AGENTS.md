@@ -26,6 +26,13 @@
 
 ## Auth and global shell
 
-- Do not make `src/app/layout.tsx` auth-aware or add global nav by default unless the user asks. Integrate auth UI incrementally inside routes or features after backend auth exists (see platform `nullshot-nextjs-auth` skill when using the JWT cookie starter).
+- Do not make `src/app/layout.tsx` auth-aware or add global nav by default unless the user asks. Integrate auth UI incrementally inside routes or features after backend auth exists (see `.claude/skills/nullshot-nextjs-auth` when using the JWT cookie starter).
+
+## Agent skills
+
+Claude skills for Next.js and Cloudflare live in `.claude/skills/` (synced from platform). Notable entries:
+
+- **Next.js / React:** `nullshot-nextjs-auth`, `nullshot-frontend-features`, `vercel-react-best-practices`, `vercel-composition-patterns`, `tanstack-query`, `design-system`, `web-design-guidelines`, `web-perf`
+- **Cloudflare:** `nullshot-d1-workflows`, `nullshot-do-migrations`, `nullshot-investigate-cloud-logs`, `nullshot-service-communication`, `nullshot-debug-logger`
 
 

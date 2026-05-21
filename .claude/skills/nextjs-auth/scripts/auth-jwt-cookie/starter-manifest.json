@@ -1,0 +1,19 @@
+{
+  "files": [
+    { "source": "src/types/auth.ts", "target": "src/types/auth.ts", "description": "Shared auth types." },
+{ "source": "src/lib/password.ts", "target": "src/lib/password.ts", "description": "Password hashing helpers." },
+    { "source": "src/lib/jwt.ts", "target": "src/lib/jwt.ts", "description": "JWT sign and verify helpers." },
+    { "source": "src/lib/session-cookie.ts", "target": "src/lib/session-cookie.ts", "description": "Cookie serialize and clear helpers." },
+    { "source": "src/repositories/user-repository.ts", "target": "src/repositories/user-repository.ts", "description": "D1 user queries only." },
+    { "source": "src/services/auth-service.ts", "target": "src/services/auth-service.ts", "description": "Auth business logic and current-user lookup." },
+    { "source": "src/app/api/auth/signup/route.ts", "target": "src/app/api/auth/signup/route.ts", "description": "Signup route handler." },
+    { "source": "src/app/api/auth/login/route.ts", "target": "src/app/api/auth/login/route.ts", "description": "Login route handler." },
+    { "source": "src/app/api/auth/logout/route.ts", "target": "src/app/api/auth/logout/route.ts", "description": "Logout route handler." },
+    { "source": "migrations/0000_auth.sql", "target": "migrations/0000_auth.sql", "description": "Users table migration." }
+  ],
+  "notes": [
+    "Stage this starter bundle first, then merge only the manifest targets into the real app tree.",
+    "The staged starter files are for reference and adaptation; they should not be committed directly.",
+    "This starter intentionally leaves login/signup page shape, dashboard UX, and header/navigation integration to the current room structure instead of materializing opinionated UI files automatically."
+  ]
+}

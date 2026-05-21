@@ -26,7 +26,7 @@ A minimal starter for fullstack apps with the Next.js App Router. The default UI
 
 Avoid wildcard barrel exports (`export * from`) to prevent name collisions and bundle bloat. Prefer direct imports for heavy third-party packages where it helps tree-shaking (see Vercel React best practices).
 
-Cursor rules for agents live in `.cursor/rules/`.
+Cursor rules for agents live in `.cursor/rules/`. Claude skills for Next.js and Cloudflare development live in `.claude/skills/`.
 
 ## Local Development
 
@@ -70,6 +70,8 @@ src/
   repositories/
 migrations/
   README.md
+.claude/
+  skills/
 .cursor/
   rules/
 .dev.vars.example
